@@ -10,7 +10,7 @@ import pandas as pd
 import joblib
 
 ## TODO: Import any additional libraries you need to define a model
-
+from sklearn.ensemble import RandomForestClassifier
 
 # Provided model load function
 def model_fn(model_dir):
@@ -42,7 +42,14 @@ if __name__ == '__main__':
     parser.add_argument('--data-dir', type=str, default=os.environ['SM_CHANNEL_TRAIN'])
     
     ## TODO: Add any additional arguments that you will need to pass into your model
-    
+    parser.add_argument('--n_estimators', type=int, default=200, metavar='N_EST',
+                        help='number of estimators for training (default: 200)')
+    parser.add_argument('--max_depth', type=int, default=20, metavar='MAX_DP',
+                        help='max depth for each estimator (default: 10)')
+    parser.add_argument('--min_samples_split', type=int, default=2, metavar='MIN_SPLIT',
+                        help='min samples for split in each epoch (default: 2)')
+    parser.add_argument('--min_samples_leaf', type=int, default=2, metavar='MIN_LEAF',
+                        help='min size of leaf (default: 2)')
     # args holds all passed-in arguments
     args = parser.parse_args()
 
@@ -59,13 +66,16 @@ if __name__ == '__main__':
     
 
     ## TODO: Define a model 
-    model = None
+    model = RandomForestClassifier(n_estimators = args.n_estimators, 
+                        max_depth=args.max_depth, 
+                        min_samples_split=args.min_samples_split, 
+                        min_samples_leaf=args.min_samples_leaf)
     
     
     ## TODO: Train the model
+    model.fit(train_x, train_y)
     
-    
-    
+    print('finish training model')
     ## --- End of your code  --- ##
     
 
